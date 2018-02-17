@@ -1,0 +1,9 @@
+[Unit]
+Description=Pi shutdown button
+
+[Service]
+Type=idle
+ExecStart=/usr/local/sbin/button-whisperor "shutdown -h now"
+
+[Install]
+WantedBy=multi-user.target

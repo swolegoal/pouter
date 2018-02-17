@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Get our pin definitions and functions
+. /usr/local/lib/sshuttlify.pins
+
+pin_value $green_led  "0"
+pin_value $yellow_led "1"
+pin_value $red_led    "1"

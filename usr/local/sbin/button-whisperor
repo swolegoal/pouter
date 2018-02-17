@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Get our GPIO function definitions
+. /usr/local/lib/sshuttlify.pins
+
+push_button="19"
+
+# Export the following pin to userspace
+export_pin $push_button
+
+# Use pin for reading input
+pin_direction $push_button "in"
+pin_direction $push_button "high"
+
+# Do something if pin goes low
+while :; do
+  if [ "$(read_pin $push_button)" == '0' ]; then
+	  echo "Button pressed!"
+	  echo "$($1)"
+	  sleep 1
+  fi
+done

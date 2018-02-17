@@ -1,0 +1,21 @@
+#!/bin/bash
+
+green_led="14"
+yellow_led="15"
+red_led="18"
+
+export_pin () {
+  echo "$1" > /sys/class/gpio/export
+}
+
+pin_direction () {
+  echo "$2" > /sys/class/gpio/gpio"$1"/direction
+}
+
+read_pin () {
+  cat /sys/class/gpio/gpio"$1"/value
+}
+
+pin_value () {
+  echo "$2" > /sys/class/gpio/gpio"$1"/value
+}

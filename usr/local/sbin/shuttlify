@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# The remote user@host:port we'll be using
+remote="u0_a17@192.168.43.1:8022"
+
+# Get our pin definitions and functions
+. /usr/local/lib/sshuttlify.pins
+
+day_suffix() {
+  case `date +%d` in
+       1|21|31) echo "st";;
+       2|22)    echo "nd";;
+       3|23)    echo "rd";;
+       *)       echo "th";;
+  esac
+}
+
+# Export the following pins to userspace
+export_pin $green_led
+export_pin $yellow_led
+export_pin $red_led
+
+# Use pins as "output" pins
+pin_direction $green_led  "out"
+pin_direction $yellow_led "out"
+pin_direction $red_led    "out"
+
+while :; do
+  # Sleep for 10 seconds if /tmp/pause_shuttle file exists
+  if [ -a /tmp/pause_shuttle ]; then
+        pin_value $red_led    "0"
+        pin_value $green_led  "0"
+	pin_value $yellow_led "1"
+	sleep 10
+	continue
+  fi
+
+  # Uncomment the following two lines to make a massive logfile
+  #echo -e \n >> /var/log/sshuttle/start.log
+  #date >> /var/log/sshuttle/start.log
+
+  # Print pretty date (useful for debugging)
+  date; echo "Starting sshuttle on $(date "+%A") the $(date "+%d`day_suffix`") of $(date "+%B"), $(date "+%Y") at $(date "+%I:%M %p")"
+
+  # Illuminate green LED when sshuttle starts
+  pin_value $yellow_led "0"
+  pin_value $red_led    "0"
+  pin_value $green_led  "1"
+  nice -n -10 sshuttle --syslog --listen 0.0.0.0 -r "$remote" 0.0.0.0/0
+
+  # Indicate that there is a loss of SSH connection
+  pin_value $green_led  "0"
+  pin_value $red_led    "1"
+  sleep 1
+done

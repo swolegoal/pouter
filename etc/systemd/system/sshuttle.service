@@ -1,0 +1,10 @@
+[Unit]
+Description=Transparent SSH-tunnelifier
+
+[Service]
+Type=idle
+ExecStart=/bin/su -c "sudo /usr/local/sbin/shuttlify" -s /bin/bash sshuttle
+ExecStopPost=/usr/local/sbin/shuttle-cleanup
+
+[Install]
+WantedBy=multi-user.target
