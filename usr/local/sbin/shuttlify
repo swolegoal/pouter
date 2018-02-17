@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # The remote user@host:port we'll be using
-remote="u0_a17@192.168.43.1:8022"
+remote="user@host:port"
 
 # Get our pin definitions and functions
 . /usr/local/lib/sshuttlify.pins
